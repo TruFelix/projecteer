@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<script>
+		fetch("http://|HOST|:|BACKENDPORT|/data").then(data => {
+			document.getElementById("display").innerText = JSON.stringify(data)
+		})
+	</script>
+	<body>
+		<!-- This is separate to simulate an independent project -->
+		<p id="display">
+			Here the data will be shown, currently it still loads
+		</p>
+	</body>
+</html>

@@ -12,7 +12,7 @@ To get started create a `project.config` file in the root of your project.
 In it write a format like dotenv:
 `[VARIABLENAME]=[EXPRESSION]`
 
-But unlike dotenv, the `EXPRESSION` can also be a calculation, thus strings have to be contained in `"` quotes.
+But unlike dotenv, the `EXPRESSION` can also be a calculation (any python expression in that regard), thus strings have to be contained in `"` quotes.
 
 
 ## Configuration

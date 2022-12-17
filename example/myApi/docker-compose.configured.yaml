@@ -1,0 +1,8 @@
+services:
+  backend:
+    build: dockerfile
+    env_file:
+      - .env
+    image: my-api
+    ports:
+      - |BACKENDPORT|:|BACKENDPORT|

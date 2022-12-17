@@ -12,7 +12,9 @@ variables: Dict[str, Any] = {}
 def parseProjectConfig(lines: List[str]):
     global variables
 
-    for line in lines:
+    for lineNum in range(len(lines)):
+        line = lines[lineNum]
+
         if line.startswith(COMMENT):
             continue
 
@@ -23,7 +25,10 @@ def parseProjectConfig(lines: List[str]):
             index = line.find(COMMENT)
             line = line[0:index]
 
-        parseLine(line)
+        try:
+            parseLine(line)
+        except ValueError as ve:
+            raise Exception(f"Syntax error in line {lineNum}:\n  {line}\n  {str(ve)}")
 
     for k, _v in variables.items():
         if isinstance(variables[k], bool):

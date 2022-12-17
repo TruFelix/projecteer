@@ -1,0 +1,19 @@
+# no configured files😉
+**/*.configured.*
+
+# No Node_modules
+**/node_modules
+node_modules
+
+# Only the build of the client
+!|SERVEROOT|
+
+# No Hidden files
+.*
+
+# No Docs
+*.md
+docs
+
+# No Tests
+test*

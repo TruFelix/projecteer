@@ -1,0 +1,15 @@
+FROM node:lts
+
+WORKDIR /usr/src/myApi
+
+COPY package-lock.json package-lock.json
+COPY package.json package.json
+
+RUN npm ci only=production
+
+COPY * .
+
+ENV NODE_ENV production
+
+EXPOSE |BACKENDPORT|
+CMD ["node", "server.js"]
