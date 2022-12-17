@@ -1,0 +1,3 @@
+# ignore all generated Files, as they would only be duplicate
+# and can be re-generated anytime
+|PROJECTEER_GENERATED_FILES|
