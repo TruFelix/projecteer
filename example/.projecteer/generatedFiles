@@ -1,7 +1,8 @@
+.gitignore
+myApi/.dockerignore
 myApi/.env
+myApi/server.js
+apiUser/readme.md
+myApi/dockerfile
 apiUser/index.html
 myApi/docker-compose.yaml
-myApi/.dockerignore
-myApi/server.js
-.gitignore
-myApi/dockerfile
