@@ -1,10 +1,11 @@
 install: cd |BACKEND_DIR| && npm i
 
 # Backend
-CWD="|BACKEND_DIR|"
+CWD=./|BACKEND_DIR|
 start: npm start
 weirdCmd: echo "WeirdCmd: YES"
 build: docker -t . -f
 
 # Frontend
-CWD = "./apiUser"
+CWD = ./apiUser
+frontend: echo "Yew"

@@ -16,12 +16,11 @@ import os
 from typing import Any, Dict, List
 
 import yaml
+from termcolor import COLORS, colored, cprint
 
 from parse import *
 from parse.config_parser import ConfigParser
 from replacer import replace
-
-from termcolor import COLORS, colored, cprint
 
 
 def startScript(scriptAndArgs: str, projectConfig: ConfigParser):
@@ -32,6 +31,10 @@ def startScript(scriptAndArgs: str, projectConfig: ConfigParser):
 	splits = scriptAndArgs.split(" ")
 	name = splits[0]
 	script = findScript(name, projectConfig)
+
+	if script is None:
+		cprint(f"Couldn't find script with name '{name}'", "yellow", attrs=["bold"])
+		return
 	
 	if not CWD in projectConfig.variables.keys():
 		projectConfig.variables[CWD] = os.path.abspath(".")
@@ -58,7 +61,9 @@ def findScript(name: str, projectConfig: ConfigParser):
 			if COMMENT in line or line == "" or line.isspace():
 				continue
 
-			[scriptName, script] = line.split(":")
+			split = line.split(":")
+			scriptName = split[0]
+			script = ":".join(split[1:])
 			if scriptName == name:
 				# print(f"replacing: {script}, {projectConfig.variables}")
 				return replace(script, projectConfig.variables)

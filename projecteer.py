@@ -91,41 +91,32 @@ If true, it should be executed.
 It should be possible to execute only one cmd at a time, the first found should be executed.
 
 Before executing any function contained in this, execute `loadProjectConfig`, if "loadProjectConfig" is True
+if `single` is True, don't execute any other script below
 """
 cmds = {
-    lambda argv: '--cleanup' in argv: 
-        {"name": "cleanup", "func": cleanup, "loadProjectConfig": False},
-    lambda argv: True: 
-        {"name": "configureProject", "func": lambda: configureProject(silent=len(argv)>1), "loadProjectConfig": True},
+    lambda argv: 'cleanup' in argv: 
+        {"name": "clean", "func": cleanup, "loadProjectConfig": False, "single": True},
     lambda argv: 'stats' in argv:
-        {"name": "stats", "func": lambda: stats(projectConfig), "loadProjectConfig": True},
-    lambda argv: len(argv) > 1 and not 'stats' in argv: 
-        {"name": "startScript", "func": lambda: startScript(" ".join(argv[1:]), projectConfig), "loadProjectConfig": True},
+        {"name": "stats", "func": lambda: stats(projectConfig), "loadProjectConfig": True, "single": True},
+    lambda argv: True: 
+        {"name": "configureProject", "func": lambda: configureProject(silent=len(argv)>1), "loadProjectConfig": True, "single": False},
+    lambda argv: len(argv) > 1: 
+        {"name": "startScript", "func": lambda: startScript(" ".join(argv[1:]), projectConfig), "loadProjectConfig": True, "single": False},
 }
 
 
 def executeCmd(cmdAndArgs):
     """This handles the execution of cmdName, including loading the projectconfig"""
 
-    cmdName = " ".join(cmdAndArgs[1:])
-
-    i = 0
     for checker, cmd in cmds.items():
-        if checker(argv):
+        if checker(cmdAndArgs):
             if (cmd["loadProjectConfig"]):
                 loadProjectConfig()
-            cmdNm = cmd["name"]
-            # cprint(f"Executing: {cmdNm} | {cmdName}", "green")
+
             cmd["func"]()
-        i += 1
+            if cmd["single"]:
+                return
 
 
 if __name__ == "__main__":
     executeCmd(argv)
-    # if '--cleanup' in argv:
-    #     cleanup()
-
-    # if len(argv) > 1:
-    #     # handle script
-    #     startScript(" ".join(argv[1:]))
-    #     exit(0)

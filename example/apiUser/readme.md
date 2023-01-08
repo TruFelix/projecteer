@@ -1,1 +1,0 @@
-****This should simulate an independent project**

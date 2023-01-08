@@ -1,6 +1,10 @@
 import fnmatch
-from parse.config_parser import ConfigParser
 import os
+from sys import argv
+
+from termcolor import colored, cprint
+
+from parse.config_parser import ConfigParser
 
 SRC_FOLDERS_VARNAME="SRC_FOLDERS"
 
@@ -8,7 +12,10 @@ def stats(projectConfig: ConfigParser):
 	"""prints some stats about the project"""
 	totalFiles = []
 
-	srcFolders = projectConfig.variables[SRC_FOLDERS_VARNAME]
+	srcFolders = projectConfig.variables[SRC_FOLDERS_VARNAME] if SRC_FOLDERS_VARNAME in projectConfig.variables.keys() else ['.']
+	for arg in argv[2:]:
+		srcFolders.append(arg)
+		
 	excludes = [".*", ".projecteer"]
 
 	for srcFolder in srcFolders:
@@ -16,22 +23,27 @@ def stats(projectConfig: ConfigParser):
 			excludes.append(srcFolder[1:].replace("\\", "/"))
 			srcFolders.remove(srcFolder)
 	
-	print(f"srcFolders: {srcFolders}")
-	print(f"excludes: {excludes}")
+	print("Using the following for calculation:", "blue")
+	cprint(f"  srcFolders: " + ", ".join(srcFolders), 'blue')
+	cprint(f"  excludes: " + ", ".join(excludes), 'blue')
 
 	for srcFolder in srcFolders:
 		for file in getFiles(srcFolder, excludes):
 
 			totalFiles.append(file)
 	
-	totalFiles = list(filter(lambda x: '.configured' not in x, totalFiles))
-	print(totalFiles)
-	print(f"TotalFiles: {len(totalFiles)}")
+	for file in list(totalFiles):
+		if '.configured' in file and file.replace('.configured', "") in totalFiles:
+			totalFiles.remove(file.replace('.configured', ""))
+
+	totalFilesStr = colored(str(len(totalFiles)), "green", attrs=["bold"])
+	print(f"TotalFiles: {totalFilesStr}")
 
 	count = 0
 	for file in totalFiles:
 		count += countLines(file)
-	print(f"{count} Lines of code")
+	countStr = colored(str(count), "green", attrs=["bold"])
+	print(f"{countStr} Lines of code")
 
 def getFiles(dir: str, excludes):
 	allFiles = []
@@ -41,13 +53,15 @@ def getFiles(dir: str, excludes):
 			for exlcude in excludes:
 				if(fnmatch.fnmatch(d, exlcude)):
 					try:
-						pass
 						dirs.remove(d)
 					except:
 						pass
 
 			if joined in excludes:
-				dirs.remove(d)
+				try:
+					dirs.remove(d)
+				except:
+					pass
 
 		for file in files:
 			# matches = False
@@ -59,12 +73,14 @@ def getFiles(dir: str, excludes):
 			# if matches:
 			# 	continue
 
-			print(file)
 			allFiles.append(root.replace("\\", "/") + "/" + file)
 	return allFiles
 
 def countLines(file):
 	lines = []
-	with open(file, 'r') as f:
-		lines = f.readlines()
+	try:
+		with open(file, 'r') as f:
+			lines = f.readlines()
+	except UnicodeDecodeError:
+		pass
 	return len(lines)
