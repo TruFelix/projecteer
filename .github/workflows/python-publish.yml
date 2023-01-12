@@ -21,7 +21,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: a
+      name: pypi
       url: https://pypi.org/project/projecteer
 
     steps:

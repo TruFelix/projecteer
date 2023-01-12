@@ -18,6 +18,9 @@ permissions:
 jobs:
   test-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: test-pypi
+      url: https://test.pypi.org/project/projecteer/
 
     steps:
     - uses: actions/checkout@v3
