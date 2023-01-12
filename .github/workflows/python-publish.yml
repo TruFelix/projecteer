@@ -8,9 +8,11 @@
 
 name: Upload Python Package
 
-on:
+on:   
   release:
     types: [published]
+    tag:
+      - v*.*.*
 
 permissions:
   contents: read
@@ -37,7 +39,7 @@ jobs:
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@v1.6.4
       with:
-          user: TruFelix
+        user: TruFelix
         password: ${{ secrets.PYPI_API_TOKEN }}
         skip_existing: true
         repository_url: https://test.pypi.org/legacy/
