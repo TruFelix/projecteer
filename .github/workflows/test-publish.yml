@@ -9,7 +9,7 @@
 name: Test-Upload Python Package
 
 on:
-  pull:
+  pull_request:
     branches: 'main'
 
 permissions:
