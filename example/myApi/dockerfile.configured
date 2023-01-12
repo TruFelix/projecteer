@@ -11,5 +11,5 @@ COPY * .
 
 ENV NODE_ENV production
 
-EXPOSE |BACKENDPORT|
+EXPOSE |PORT|
 CMD ["node", "server.js"]

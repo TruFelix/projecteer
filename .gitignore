@@ -1,2 +1,4 @@
 /.vscode
 /**/__pycache__
+**/projecteer.egg-info
+dist

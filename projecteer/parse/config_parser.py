@@ -7,10 +7,22 @@ from parse import *
 
 
 class ConfigParser:
-    def __init__(self):
+    def __init__(self, configRoot: str = "."):
         """A dictionary holding all values parsed from the config"""
         self.variables: Dict[str, Any] = {}
         self.loaded = False
+        self.configRoot = configRoot
+    
+    def __repr__(self) -> str:
+        tmp = "variables: { "
+        for key, value in self.variables.items():
+            if key.startswith('__'): continue
+            tmp += f"{key}: {value}, "
+        
+        tmp = tmp.rstrip(", ")
+        tmp += " }, loaded: " + str(self.loaded)
+        return tmp
+
 
     def parse(self, lines: List[str]):
         # need lineNum for SyntaxError traces
@@ -45,6 +57,8 @@ class ConfigParser:
 
     def parseLine(self, line: str, replace: bool = False):
         [key, value] = line.replace("\n", "").split("=")
+        key = key.strip()
+        value = value.strip()
         self.tryAsNumber(key, value)
         self.tryAsString(key, value)
         self.tryAsExpression(key, value)

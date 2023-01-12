@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "projecteer"}
+
+[project.scripts]
+projecteer = "projecteer:main"
+
+[project]
+dependencies = [
+    "termcolor",
+]
+version = "0.1.10"
+name = "projecteer"
+description = "Helps you keep your project together"
+readme = "README.md"
+
+
+[project.urls]
+"Homepage" = "https://github.com/TruFelix/projecteer"
+"Bug Tracker" = "https://github.com/TruFelix/projecteer/issues"

@@ -6,11 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Upload Python Package
+name: Test-Upload Python Package
 
 on:
-  release:
-    types: [published]
+  pull:
+    branches: 'main'
 
 permissions:
   contents: read
@@ -37,7 +37,7 @@ jobs:
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@v1.6.4
       with:
-          user: TruFelix
-        password: ${{ secrets.PYPI_API_TOKEN }}
+        user: TruFelix
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         skip_existing: true
         repository_url: https://test.pypi.org/legacy/

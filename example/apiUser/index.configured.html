@@ -7,7 +7,7 @@
 		<title>Document</title>
 	</head>
 	<script>
-		fetch("http://|HOST|:|BACKENDPORT|/data").then(data => {
+		fetch("http://|HOST|:|PORT|/data").then(data => {
 			document.getElementById("display").innerText = JSON.stringify(data)
 		})
 	</script>

@@ -16,8 +16,9 @@ app.use(express.static("|SERVEROOT|"));
 
 const port = process.env["PORT"];
 const host = process.env["HOST"];
+const version = process.env["VERSION"];
 app.listen(port, host, () => {
-	console.log(`running on http://${host}:${port}`);
+	console.log(`running on http://${host}:${port} version ${version}`);
 })
 
 function logger(req, res, next) {
