@@ -18,7 +18,6 @@ permissions:
 jobs:
   test-deploy:
     runs-on: ubuntu-latest
-    environment: a
 
     steps:
     - uses: actions/checkout@v3
