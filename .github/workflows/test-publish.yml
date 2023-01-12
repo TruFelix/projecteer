@@ -6,23 +6,21 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Upload Python Package
+name: Test-Upload Python Package
 
-on:   
-  release:
-    types: [published]
-    tag:
-      - v*.*.*
+on:
+  pull_request:
+    branches: 'main'
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
+  test-deploy:
     runs-on: ubuntu-latest
     environment:
-      name: pypi
-      url: https://pypi.org/project/projecteer
+      name: test-pypi
+      url: https://test.pypi.org/project/projecteer/
 
     steps:
     - uses: actions/checkout@v3
@@ -43,5 +41,6 @@ jobs:
       uses: pypa/gh-action-pypi-publish@v1.6.4
       with:
         user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         skip_existing: true
+        repository_url: https://test.pypi.org/legacy/

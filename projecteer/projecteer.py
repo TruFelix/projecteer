@@ -17,8 +17,12 @@ from replacer import replace
 
 projectConfig = ConfigParser()
 
+print("projectConfig: " + str(projectConfig))
+
+linesAfter=0
 
 def configureFile(filePath: str, silent: bool = False):
+    global linesAfter
     with open(filePath, 'r') as f:
         fileContent = "".join(f.readlines())
 
@@ -28,6 +32,7 @@ def configureFile(filePath: str, silent: bool = False):
     generatedFilePath = filePath.replace(".configured", "")
     generateadFileName = os.path.basename(generatedFilePath)
 
+    didSomething = True
     if not silent:
         doing = None
         if fileContent == replacedFileContent:
@@ -37,49 +42,86 @@ def configureFile(filePath: str, silent: bool = False):
                 alreadyGeneratedFileContent = "".join(f.readlines())
             if alreadyGeneratedFileContent == replacedFileContent:
                 doing = colored("checked", "grey")
+                didSomething = False
             else: 
                 doing = colored("updating", "yellow")
         else:
             doing = colored("creating", "green")
         print(f"  {doing} {generatedFilePath}")
+        linesAfter += 1
 
     # actually write
-    with open(generatedFilePath, 'w') as w:
-        w.write(replacedFileContent)
+    if didSomething:
+        with open(generatedFilePath, 'w') as w:
+            w.write(replacedFileContent)
+    
+    return didSomething
 
 
 def configureProject(silent: bool = False):
+    global linesAfter
     cprint("Creating/updating files...", "yellow", attrs=["bold"])
     if not silent: cprint("looking for files to be configured...")
     filePaths = findFilesToBeConfigured()
 
     updateGeneratedFilePaths = generateSpecialVariables(projectConfig.variables)
 
+    didSomething= False
+    linesAfter = 0
     for filePath in filePaths:
-        configureFile(filePath, silent)
+        if configureFile(filePath, silent):
+            didSomething = True
+
+    if not didSomething:
+        # cursorLineUpStart(linesAfter)
+        cprint("EVERYTHING UP TO DATE", "green", attrs=["bold"])
 
     updateGeneratedFilePaths()
 
 
 def loadProjectConfig():
+    global linesAfter
     """Load the whole projectConfig as by using `parseProjectConfig`"""
     if projectConfig.loaded:
         return projectConfig.variables
+    
     heading = "loading project configuration..."
     cprint(heading, "yellow")
+    linesAfter = 0
 
-    if not os.path.exists(PROJECT_CONFIG_FILE):
-        cursorLineUpStart(1)
+    CWD = os.getcwd()
+    dirs = CWD.split(os.sep)
+    cDirs = list(dirs)
+    def cDir(): return os.sep.join(cDirs) + os.sep + PROJECT_CONFIG_FILE
+    while not os.path.exists(cDir()) and len(cDirs) > 1:
+        tmpRoot = cDir()[:-len(PROJECT_CONFIG_FILE) - 1]
+        print(f"  Searched in {tmpRoot}")
+        linesAfter += 1
+        cDirs.pop()
+    
+    foundConfigFile = cDir()
+    foundRoot = os.sep.join(foundConfigFile.split(os.sep)[:-1])
+    if not os.path.exists(foundConfigFile):
+        cursorLineUpStart(linesAfter + 1)
         cursorSetHorizontal(len(heading)+1)
         cprint("failed", "red", attrs=["bold"])
+        cursorLineDownStart(linesAfter)
         cprint(
             f"'{PROJECT_CONFIG_FILE}' does not exist...are you executing in the correct directory?", "red")
         exit(-1)
-    with open('project.config', 'r') as f:
+    
+    cursorLineUpStart(linesAfter)
+    cursorSetHorizontal(len(heading) + 1)
+    cprint('found','green')
+    cprint(f"  config at {foundConfigFile}", "cyan")
+    # cprint(f"  root: {foundRoot}", "cyan")
+    with open(foundConfigFile, 'r') as f:
         configContent = f.readlines()
 
     try:
-        return projectConfig.parse(configContent)
+        projectConfig.parse(configContent)
+        projectConfig.configRoot = foundRoot
+        return projectConfig.variables
     except Exception as e:
         print(e)
         exit(-1)
@@ -118,5 +160,8 @@ def executeCmd(cmdAndArgs):
                 return
 
 
-if __name__ == "__main__":
+def main():
     executeCmd(argv)
+
+if __name__ == "__main__":
+    main()

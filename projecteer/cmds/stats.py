@@ -23,7 +23,7 @@ def stats(projectConfig: ConfigParser):
 			excludes.append(srcFolder[1:].replace("\\", "/"))
 			srcFolders.remove(srcFolder)
 	
-	print("Using the following for calculation:", "blue")
+	cprint("Using the following for calculation:", "blue")
 	cprint(f"  srcFolders: " + ", ".join(srcFolders), 'blue')
 	cprint(f"  excludes: " + ", ".join(excludes), 'blue')
 

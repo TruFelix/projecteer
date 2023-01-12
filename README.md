@@ -9,8 +9,10 @@ This should:
 
 ## Getting started
 
-To get started create a `project.config` file in the root of your project.
+The easiest way to install Projecteer is to use pip:  
+`pip install projecteer`
 
+To get started create a `project.config` file in the root of your project.  
 > This will be the last config file I promise
 
 In it write a format like dotenv:
@@ -18,12 +20,29 @@ In it write a format like dotenv:
 
 But unlike dotenv, the `EXPRESSION` can also be a calculation (any python expression in that regard), thus strings have to be contained in `"` quotes.
 
+After that you can use the `|VARIABLENAME|` in **ANY** file, just mark it as `.configured` somewhere in the name
+> eg:
+> `.configured.env`
+> `mySite.configured.html`
+> `docker-compose.configured.yaml`
+
+When working with git:
+add `|PROJECTEER_GENERATED_FILES|` to your `.gitignore`, to not check them into source-control
+
+For your scripts:
+add a `project.scripts` file and add your scripts like so:
+`SCRIPTNAME: SCRIPT-COMMAND WITH |VARIABLES|`
+if you have multiple commands that should be executed from the same working-directory:
+`CWD = ./even/here/|VARIABLES|`
+
 For a better understanding, please look at the [example](./example/).
 
 ## Configuration
 
 Projecteer helps you to configure your _project_ not your _application_.
-The difference being that a project can be anything, also multiple applications
+The difference being that a project can be anything, also multiple applications.
+
+Learn about the [Best practices](#best-practices) to make the most out of projecteer and not get frustrated.
 
 ### Variables
 Lets say you have a backend and a frontend, and they should communicate over http.
@@ -68,14 +87,16 @@ Projecteer is designed to update other config formats, not sourcecode, though un
 The reason for not using it to configure sourcecode is that you will end up with many duplicate files in your sourcecode folders.
 
 So it is encouraged to let projecteer configure:
-* .env files
+* config-files
+	* .env files
+	* .config
+	* .eslint
+	* and what not
 * dockerfiles
 	* docker-compose
 * deployment files
 	* k8s files
 	* custom scripts
 		this is discuraged, if possible, because you should also use config files
-* .config
-* .eslint
 * api-specs
 * documentation

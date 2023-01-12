@@ -1,7 +1,8 @@
+.github/workflows/myworkflow.yml
 .gitignore
-myApi/docker-compose.yaml
-myApi/server.js
 apiUser/index.html
-myApi/dockerfile
 myApi/.dockerignore
 myApi/.env
+myApi/docker-compose.yaml
+myApi/dockerfile
+myApi/server.js

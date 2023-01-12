@@ -5,4 +5,4 @@ services:
       - .env
     image: my-api
     ports:
-      - |BACKENDPORT|:|BACKENDPORT|
+      - "|PORT|:|PORT|"

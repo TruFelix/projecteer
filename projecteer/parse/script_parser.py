@@ -15,11 +15,11 @@ it can also be an absolute path:
 import os
 from typing import Any, Dict, List
 
-import yaml
 from termcolor import COLORS, colored, cprint
 
 from parse import *
 from parse.config_parser import ConfigParser
+from manager import PROJECT_SCRIPT_FILE
 from replacer import replace
 
 
@@ -40,7 +40,7 @@ def startScript(scriptAndArgs: str, projectConfig: ConfigParser):
 		projectConfig.variables[CWD] = os.path.abspath(".")
 
 	cprint(f"Executing script '{name}' in {projectConfig.variables[CWD]}", "green")
-	os.chdir(projectConfig.variables[CWD])
+	os.chdir(projectConfig.configRoot + os.sep + projectConfig.variables[CWD])
 	
 	args = " ".join(splits[1:])
 	cmd = f"{script} {args}"
@@ -50,7 +50,7 @@ def startScript(scriptAndArgs: str, projectConfig: ConfigParser):
 
 def findScript(name: str, projectConfig: ConfigParser):
 	"""Tries to find a script with 'name' and returns the replaced script-content"""
-	with open('project.scripts', 'r') as scriptsFile:
+	with open(projectConfig.configRoot + os.sep + PROJECT_SCRIPT_FILE, 'r') as scriptsFile:
 		for line in scriptsFile:
 			if "=" in line:
 				if CWD in line:
