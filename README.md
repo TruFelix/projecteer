@@ -12,6 +12,9 @@ This should:
 The easiest way to install Projecteer is to use pip:  
 `pip install projecteer`
 
+> It may be necessary to setup your PATH to look for python scripts:  
+> `C:\Users\[USER]\AppData\Roaming\Python\[PYTHON_VERSION]\Scripts`
+
 To get started create a `project.config` file in the root of your project.  
 > This will be the last config file I promise
 
